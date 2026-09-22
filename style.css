@@ -8,17 +8,18 @@ body {
     margin: 0;
 }
 .container {
-    background-color: #fff;
+    background-color: #005ca9; /* Azul padrão da Caixa */
+    color: white; /* Deixa o texto padrão branco */
     padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     text-align: center;
 }
 h1 {
-    color: #209869; /* Verde da Mega-Sena */
+    color: white; /* Título em branco */
 }
 #concurso-info {
-    color: #555;
+    color: #e0e0e0; /* Um branco levemente acinzentado para dar contraste */
     font-size: 1.2em;
     margin-bottom: 20px;
 }
@@ -29,8 +30,8 @@ h1 {
     flex-wrap: wrap;
 }
 .bola {
-    background-color: #209869;
-    color: white;
+    background-color: #209869; /* Mantém o fundo verde original da Mega-Sena */
+    color: white; /* Mantém o número branco */
     font-size: 1.5em;
     font-weight: bold;
     width: 60px;
@@ -39,5 +40,5 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
