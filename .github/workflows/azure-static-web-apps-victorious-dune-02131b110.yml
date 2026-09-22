@@ -10,7 +10,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 10 * * *' # Executa diariamente às 10:00 UTC (07:00 Horário de Brasília)
+    - cron: '0 10 * * *'
 
 jobs:
   build_and_deploy_job:
@@ -25,16 +25,18 @@ jobs:
           
       - name: Baixar Resultado da Caixa
         run: curl -k -s -L --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "https://servicebus2.caixa.gov.br/portaldeloterias/api/megasena/" > resultado.json
-     # --- INÍCIO DO NOVO PASSO DE INJEÇÃO ---
+
+      # --- INÍCIO DO PASSO DE INJEÇÃO PARA O AMBIENTE DEV ---
       - name: Injetar Visual de DEV (Apenas na branch dev)
         if: github.ref == 'refs/heads/dev'
         run: |
           # 1. Troca o azul pelo vermelho no CSS
           sed -i 's/#005ca9/#cc0000/g' style.css
           
-          # 2. Insere a barra de aviso no final do HTML, logo antes de fechar a tag </body>
+          # 2. Insere a barra de aviso no rodapé do HTML
           sed -i 's/<\/body>/<div style="position: fixed; bottom: 0; width: 100%; background-color: #cc0000; color: white; text-align: center; padding: 10px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.5);">🚨 AMBIENTE DE DESENVOLVIMENTO (DEV) 🚨<\/div><\/body>/i' index.html
-      # --- FIM DO NOVO PASSO DE INJEÇÃO ---
+      # --- FIM DO PASSO DE INJEÇÃO ---
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -42,13 +44,10 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_VICTORIOUS_DUNE_02131B110 }} # Deixe o token que o Azure gerou automaticamente aqui
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          production_branch: "main" # <-- INSTRUÇÃO PARA O AZURE
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "/" # App source code path
-          api_location: "" # Api source code path - optional
-          output_location: "." # Built app content directory - optional
-          ###### End of Repository/Build Configurations ######
+          production_branch: "main" # Força a main a ser a Produção oficial
+          app_location: "/" 
+          api_location: "" 
+          output_location: "." 
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
