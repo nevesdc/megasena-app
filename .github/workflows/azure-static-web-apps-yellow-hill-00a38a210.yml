@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
@@ -24,11 +25,16 @@ jobs:
           
       - name: Baixar Resultado da Caixa
         run: curl -k -s -L --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "https://servicebus2.caixa.gov.br/portaldeloterias/api/megasena/" > resultado.json
-      # --- INÍCIO DO NOVO PASSO ---
-      - name: Pintar fundo de vermelho (Apenas no Ambiente de DEV/PR)
-        if: github.event_name == 'pull_request'
-        run: sed -i 's/#005ca9/#cc0000/g' style.css
-      # --- FIM DO NOVO PASSO ---
+     # --- INÍCIO DO NOVO PASSO DE INJEÇÃO ---
+      - name: Injetar Visual de DEV (Apenas na branch dev)
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          # 1. Troca o azul pelo vermelho no CSS
+          sed -i 's/#005ca9/#cc0000/g' style.css
+          
+          # 2. Insere a barra de aviso no final do HTML, logo antes de fechar a tag </body>
+          sed -i 's/<\/body>/<div style="position: fixed; bottom: 0; width: 100%; background-color: #cc0000; color: white; text-align: center; padding: 10px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.5);">🚨 AMBIENTE DE DESENVOLVIMENTO (DEV) 🚨<\/div><\/body>/i' index.html
+      # --- FIM DO NOVO PASSO DE INJEÇÃO ---
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
