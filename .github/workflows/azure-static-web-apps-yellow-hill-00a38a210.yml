@@ -8,6 +8,8 @@ on:
     types: [opened, synchronize, reopened, closed]
     branches:
       - main
+  schedule:
+    - cron: '0 10 * * *' # Executa diariamente às 10:00 UTC (07:00 Horário de Brasília)
 
 jobs:
   build_and_deploy_job:
