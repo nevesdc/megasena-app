@@ -24,7 +24,11 @@ jobs:
           
       - name: Baixar Resultado da Caixa
         run: curl -k -s -L --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "https://servicebus2.caixa.gov.br/portaldeloterias/api/megasena/" > resultado.json
-
+      # --- INÍCIO DO NOVO PASSO ---
+      - name: Pintar fundo de vermelho (Apenas no Ambiente de DEV/PR)
+        if: github.event_name == 'pull_request'
+        run: sed -i 's/#005ca9/#cc0000/g' style.css
+      # --- FIM DO NOVO PASSO ---
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
