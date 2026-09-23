@@ -11,6 +11,7 @@ on:
       - main
   schedule:
     - cron: '0 10 * * *'
+  workflow_dispatch: # <-- ADICIONADO PARA PERMITIR DISPARO MANUAL
 
 jobs:
 build_and_deploy_job:
